@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
@@ -16,28 +16,44 @@ import TextField from "@mui/material/TextField";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
+import axios from "axios";
+
 const lightGray = "#f2f2f2";
 const gray = "#cccccc";
 const green = "#4caf50";
 const white = "#ffffff";
 
-const initialState = [
-  {
-    id: 1,
-    name: "John Doe",
-    gender: "Male",
-    school: "Example University",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    gender: "Female",
-    school: "Another University",
-  },
-];
+// const initialState = [
+//   {
+//     id: 1,
+//     name: "John Doe",
+//     gender: "Male",
+//     school: "Example University",
+//   },
+//   {
+//     id: 2,
+//     name: "Jane Smith",
+//     gender: "Female",
+//     school: "Another University",
+//   },
+// ];
 
 function StudentsPage() {
-  const [students, setStudents] = useState(initialState);
+  // const [students, setStudents] = useState(initialState);
+
+  const [students, setStudents] = useState([]);
+  useEffect(() => {
+    // Fetch student data from backend API when component mounts
+    axios
+      .get("http://localhost:3001/students")
+      .then((response) => {
+        setStudents(response.data.data.students);
+      })
+      .catch((error) => {
+        console.error("Error fetching students:", error);
+      });
+  }, []);
+
   const [open, setOpen] = useState(false);
   const [newStudent, setNewStudent] = useState({
     id: "",
